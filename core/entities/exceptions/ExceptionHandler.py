@@ -19,6 +19,10 @@ class ExceptionHandler(Exception):
             line_one = formatted_message[:character_limit]
             remaining_text = formatted_message[character_limit:]
 
+            sentences = remaining_text.split('\n')
+            cleaned_sentences = [sentence.lstrip() for sentence in sentences if sentence]
+            remaining_text = '\n'.join(cleaned_sentences)
+
             available_length = character_limit - len(self.type_error) - identification - 5
 
             lines = [f"{' ' * (len(self.type_error) + identification)}{remaining_text[i:i + available_length]}" for i in

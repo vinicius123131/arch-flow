@@ -13,8 +13,9 @@ class DirectoryExplorerImplementation:
                 if extension is None or filename.endswith(extension):
                     files.append(os.path.join(root, filename))
         if len(files) == 0:
-            message_error = f"files with name or extension '{extension}' on directory '{directory}' is null" if extension else \
-                f"files on directory '{directory}' is null"
+            message_error = f"files with name or extension '{extension}' on directory '{directory}' is None" \
+                if extension else \
+                f"this directory '{directory}' is empty"
             return NotFoundException.not_found_error(message_error)
         return files
 
@@ -27,14 +28,23 @@ class DirectoryExplorerImplementation:
             folders = [f for f in folders if os.path.basename(f) == folder]
 
         if len(folder) == 0:
-            return NotFoundException.not_found_error(f"")
+            message_error = f"folders with name '{folder}' on directory '{directory}' is None" \
+                if folder else \
+                f"this directory '{directory}' is empty"
+            return NotFoundException.not_found_error(message_error)
         return folders
 
     @staticmethod
     def find_only_file(directory, file):
         files = DirectoryExplorerImplementation.list_files(directory, file)
-        qtde_files = len(files)
-        if qtde_files == 0 or qtde_files >= 2:
-            print("Muitos arquivos encontrados, erro na busca única")
-            sys.exit(1)
+        qtde_files = len(files) if files is not None else 0
+        if qtde_files == 0:
+            return NotFoundException.fatal_not_found_error(f"File '{file}' could not be located in the specified "
+                                                           f"directory '{directory}'. This file is essential for "
+                                                           f"the proper functioning of the application.")
+        if qtde_files >= 2:
+            return NotFoundException.fatal_not_found_error(f"Multiple files with the name '{file}' have been found "
+                                                           f"in the directory '{directory}'. It is highly advisable "
+                                                           f"to have only one file with this name to ensure the "
+                                                           f"optimal functioning of the application.")
         return files
