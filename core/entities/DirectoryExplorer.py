@@ -1,6 +1,5 @@
 import os
-import sys
-from core.entities.implementations.DirectoryExplorerImplementation import  DirectoryExplorerImplementation
+from core.entities.implementations.DirectoryExplorerImplementation import DirectoryExplorerImplementation
 
 
 class DirectoryExplorer:
@@ -10,6 +9,12 @@ class DirectoryExplorer:
         if directory is None:
             self.directory = os.getcwd()
 
+    def set_directory(self, directory):
+        self.directory = directory
+
+    def get_directory(self):
+        return self.directory
+
     def list_files(self, extension=None):
         return self.implementation.list_files(self.directory, extension)
 
@@ -18,3 +23,15 @@ class DirectoryExplorer:
 
     def find_only_file(self, file):
         return self.implementation.find_only_file(self.directory, file)
+
+    def find_only_folder(self, folder):
+        return self.implementation.find_only_folder(self.directory, folder)
+
+    def find_files_ignoring_this_folder(self, file, folder):
+        return self.implementation.find_files_ignoring_this_folder(self.directory, file, folder)
+
+    def find_folders_ignoring_this_folder(self, folder, folder_to_ignore):
+        return self.implementation.find_folders_ignoring_this_folder(self.directory, folder, folder_to_ignore)
+
+    def read_file(self, file_path, required=False):
+        return self.implementation.read_file(file_path, required)

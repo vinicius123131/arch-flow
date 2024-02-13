@@ -1,6 +1,4 @@
 import os
-import sys
-
 from core.entities.exceptions.NotFoundException import NotFoundException
 
 
@@ -21,17 +19,21 @@ class DirectoryExplorerImplementation:
 
     @staticmethod
     def list_folders(directory, folder=None):
-        folders = [os.path.join(directory, d) for d in os.listdir(directory) if
-                   os.path.isdir(os.path.join(directory, d))]
+        folders = []
+        for root, dirs, files in os.walk(directory):
+            for d in dirs:
+                folder_path = os.path.join(root, d)
+                folders.append(folder_path)
 
         if folder is not None:
             folders = [f for f in folders if os.path.basename(f) == folder]
 
-        if len(folder) == 0:
+        if len(folders) == 0:
             message_error = f"folders with name '{folder}' on directory '{directory}' is None" \
                 if folder else \
                 f"this directory '{directory}' is empty"
             return NotFoundException.not_found_error(message_error)
+
         return folders
 
     @staticmethod
@@ -48,3 +50,46 @@ class DirectoryExplorerImplementation:
                                                            f"to have only one file with this name to ensure the "
                                                            f"optimal functioning of the application.")
         return files
+
+    @staticmethod
+    def find_only_folder(directory, folder):
+        folders = DirectoryExplorerImplementation.list_folders(directory, folder)
+        qtde_folders = len(folders) if folders is not None else 0
+        if qtde_folders == 0:
+            return NotFoundException.fatal_not_found_error(f"Folder '{folder}' could not be located in the specified "
+                                                           f"directory '{directory}'. This folder is essential for "
+                                                           f"the proper functioning of the application.")
+        if qtde_folders >= 2:
+            return NotFoundException.fatal_not_found_error(f"Multiple folders with the name '{folder}' have been found "
+                                                           f"in the directory '{directory}'. It is highly advisable "
+                                                           f"to have only one folder with this name to ensure the "
+                                                           f"optimal functioning of the application.")
+        return folders
+
+    @staticmethod
+    def find_files_ignoring_this_folder(directory, file, folder):
+        files = DirectoryExplorerImplementation.list_files(directory, file)
+        if files is not None:
+            files = [f for f in files if folder not in os.path.normpath(f).split(os.path.sep)]
+        return files
+
+    @staticmethod
+    def find_folders_ignoring_this_folder(directory, folder, folder_to_ignore):
+        folders = DirectoryExplorerImplementation.list_folders(directory, folder)
+        if folders is not None:
+            folders = [f for f in folders if folder_to_ignore not in os.path.normpath(f).split(os.path.sep)]
+        return folders
+
+    @staticmethod
+    def read_file(file_path, required=False):
+        if isinstance(file_path, (list, tuple)):
+            file_path = file_path[-1]
+        try:
+            with open(file_path, 'r') as file:
+                return file.read()
+        except FileNotFoundError:
+            if required:
+                return NotFoundException.fatal_not_found_error(f"File required not found: {file_path}")
+            return NotFoundException.not_found_error(f"File not found: {file_path}")
+        except Exception as e:
+            return NotFoundException.fatal_not_found_error(f"Error reading file:{file_path} \nerror {str(e)}")
