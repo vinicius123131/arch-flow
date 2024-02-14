@@ -1,5 +1,8 @@
 import os
 from core.entities.exceptions.NotFoundException import NotFoundException
+from core.entities.utils.DirectoryExplorerUtil import DirectoryExplorerUtil
+
+util = DirectoryExplorerUtil
 
 
 class DirectoryExplorerImplementation:
@@ -67,23 +70,18 @@ class DirectoryExplorerImplementation:
         return folders
 
     @staticmethod
-    def find_files_ignoring_this_folder(directory, file, folder):
+    def find_files_ignoring_this_folder(directory, file, folder_to_ignore):
         files = DirectoryExplorerImplementation.list_files(directory, file)
-        if files is not None:
-            files = [f for f in files if folder not in os.path.normpath(f).split(os.path.sep)]
-        return files
+        return util.filter_entities_by_name(files, folder_to_ignore)
 
     @staticmethod
     def find_folders_ignoring_this_folder(directory, folder, folder_to_ignore):
         folders = DirectoryExplorerImplementation.list_folders(directory, folder)
-        if folders is not None:
-            folders = [f for f in folders if folder_to_ignore not in os.path.normpath(f).split(os.path.sep)]
-        return folders
+        return util.filter_entities_by_name(folders, folder_to_ignore)
 
     @staticmethod
     def read_file(file_path, required=False):
-        if isinstance(file_path, (list, tuple)):
-            file_path = file_path[-1]
+        file_path = util.convert_to_string(file_path)
         try:
             with open(file_path, 'r') as file:
                 return file.read()
