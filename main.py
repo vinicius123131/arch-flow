@@ -2,6 +2,13 @@ import os
 from core.entities.output.OutputHandler import OutputHandler
 from core.entities.DirectoryExplorer import DirectoryExplorer
 from core.entities.StringManipulator import StringManipulator
+from core.entities.DirectoryCreator import DirectoryCreator
+
+creator = DirectoryCreator()
+path = "/home/vinicius/Documentos/projeto/pessoal/arch-flow/core/entities/teste"
+print(creator.does_file_or_directory_exist(path))
+creator.create_folder(path)
+input()
 
 string_manipulator = StringManipulator()
 use_case ='novo caso de uso'
