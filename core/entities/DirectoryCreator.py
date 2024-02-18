@@ -13,3 +13,6 @@ class DirectoryCreator:
 
     def create_folder(self, folder_path):
         return self.implementation.create_folder(folder_path)
+
+    def create_file(self, path, file_name, file_content, required=False):
+        return self.implementation.create_file(path, file_name, file_content, required)

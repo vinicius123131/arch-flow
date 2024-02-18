@@ -1,8 +1,10 @@
 import os.path
 from core.entities.exceptions.FileOrDirectoryExistsError import FileOrDirectoryExistsError
 from core.entities.output.OutputHandler import OutputHandler
+from core.entities.exceptions.NotFoundException import NotFoundException
 
-exception = FileOrDirectoryExistsError()
+exception_file_exists = FileOrDirectoryExistsError()
+exception_not_found = NotFoundException()
 output = OutputHandler()
 
 
@@ -17,6 +19,23 @@ class DirectoryCreatorImplementation:
             os.makedirs(folder_path)
             output.success_message(f"folder '{folder_path}' created successfully")
         except FileExistsError:
-            exception.already_exists_error(f"the folder '{folder_path}' already exists")
+            exception_file_exists.already_exists_error(f"the folder '{folder_path}' already exists")
         except Exception as e:
-            exception.fatal_error(f"error creating folder '{folder_path}' exception: {e}")
+            exception_file_exists.fatal_error(f"error creating folder '{folder_path}' exception: {e}")
+
+    def create_file(self, path, file_name, file_content, required=False):
+        if not self.does_file_or_directory_exist(path):
+            if required:
+                exception_not_found.fatal_not_found_error(f"path '{path}' does not exist. Could not create file "
+                                                          f"'{file_name}' and this file was required")
+            exception_not_found.not_found_error(f"path '{path}' does not exist. error creating the file '{file_name}'")
+            return None
+        try:
+            file_path = path + file_name
+            with open(file_path, 'w') as file:
+                file.write(file_content)
+            output.success_message(f"file '{file_name}' created successfully. file path '{file_path}'")
+        except Exception as e:
+            if required:
+                exception_file_exists.fatal_error(f"error creating the file '{file_name}', error '{e}'")
+            exception_file_exists.alert_error(f"error creating the file '{file_name}', error '{e}'")

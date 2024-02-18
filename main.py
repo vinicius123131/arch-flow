@@ -5,7 +5,12 @@ from core.entities.StringManipulator import StringManipulator
 from core.entities.DirectoryCreator import DirectoryCreator
 
 creator = DirectoryCreator()
-path = "/home/vinicius/Documentos/projeto/pessoal/arch-flow/core/entities/teste"
+path = "/home/vinicius/Documentos/projetos/pessoal/arch-flow/core/entities/teste/"
+file_name = 'teste1.txt'
+file_conteudo = 'teste de criação de arquivo\nquebra de linha'
+creator.create_file(path, file_name, file_conteudo, True)
+input()
+
 print(creator.does_file_or_directory_exist(path))
 creator.create_folder(path)
 input()
