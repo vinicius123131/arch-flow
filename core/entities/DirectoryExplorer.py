@@ -21,8 +21,10 @@ class DirectoryExplorer:
     def list_folders(self, folder=None):
         return self.implementation.list_folders(self.directory, folder)
 
-    def find_only_file(self, file):
-        return self.implementation.find_only_file(self.directory, file)
+    def find_only_file(self, file, directory=None):
+        if directory is None:
+            directory = os.getcwd()
+        return self.implementation.find_only_file(directory, file)
 
     def find_only_folder(self, folder):
         return self.implementation.find_only_folder(self.directory, folder)

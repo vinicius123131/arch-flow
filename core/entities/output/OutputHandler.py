@@ -30,8 +30,12 @@ class OutputHandler:
 
     @staticmethod
     def success_message(message):
-        print(OutputHandler.format_message("📟success📟", message, color_type=Fore.GREEN))
+        print(OutputHandler.format_message("[📟success📟]", message, color_type=Fore.GREEN))
 
     @staticmethod
     def information_message(message):
-        print(OutputHandler.format_message("🏴️information🏴", message, color_type=Fore.LIGHTBLACK_EX))
+        print(OutputHandler.format_message("[🏴️information🏴]", message, color_type=Fore.LIGHTBLACK_EX))
+
+    @staticmethod
+    def alert_message(message):
+        print(OutputHandler.format_message("[☢️alert message☢️]", message, color_type=Fore.YELLOW))

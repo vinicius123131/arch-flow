@@ -1,4 +1,4 @@
-from colorama import init, Fore, Style
+from colorama import init, Fore
 from core.entities.output.OutputHandler import OutputHandler
 init(autoreset=True)  # config  only for windows
 

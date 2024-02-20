@@ -97,7 +97,7 @@ class StringManipulatorImplementation:
         for (opening, content, single) in found_tags:
             subs_tags = self.extract_tags(content)
             if opening:
-                combined_tags.append((opening, content,f"<{opening}>{content}</{opening}>"))
+                combined_tags.append((opening, content, f"<{opening}>{content}</{opening}>"))
             elif single:
                 combined_tags.append((single, '', f"<{single}>"))
 
